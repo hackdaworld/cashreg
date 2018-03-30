@@ -19,13 +19,13 @@ By going open source (it actually always was) and public (it's on github now) th
 
 ## Important notes 
  
-** Due to limited free time, I am cleaning and uploading the source step by step. Feel free to contact me if you can't wait to start hacking. **
+**Due to limited free time, I am cleaning and uploading the source step by step. Feel free to contact me if you can't wait to start hacking.**
 
 This hint will be removed as soon as everything is in place and development can start.
 
 ### Disclaimer
 
-** Although the app avoids abuse by design (i.e. every single transaction is stored and can't be deleted from within the app), there is no guarantee that the software (and hardware it is innstalled on) complies with the legal requirements of the respective authorities in your country. **
+**Although the app avoids abuse by design (i.e. every single transaction is stored and can't be deleted from within the app), there is no guarantee that the software (and hardware it is innstalled on) complies with the legal requirements of the respective authorities in your country.**
 
 * Germany: [GoBD](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Weitere_Steuerthemen/Abgabenordnung/Datenzugriff_GDPdU/2014-11-14-GoBD.html) 
 * ...
