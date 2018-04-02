@@ -59,6 +59,7 @@ sudo npm install -g cordova
 Depending on the platform you want to build your app for, you need to install [prerequisites](https://cordova.apache.org/docs/en/latest/guide/cli/#install-pre-requisites-for-building):
 * [Android](https://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#requirements-and-support)
 * [iOS](https://cordova.apache.org/docs/en/latest/guide/platforms/ios/index.html#requirements-and-support)
+
 After that, add support for the respective platform, e.g. `android`.
 ```
 cordova platform add android
