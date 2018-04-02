@@ -32,21 +32,59 @@ This hint will be removed as soon as everything is in place and development can 
 
 ## Install / Deploy
 
-tbd
+You can run *CashReg* 
+* in your web browser hosting the app on a webserver or
+* as a native mobile [Cordova](http://cordova.apache.org/) app.
 
-### Get the source
+### Using a web browser 
 
-tbd
+Copy over the `./www` directory to the document root location of you webserver.
 
-### Using a web browser
+Alternatively, if you don't want to install and configure a webserver, you can use the command line [node.js](http://nodejs.org/) http server.
+After installing latest *node.js*, install and run the http-server
+```
+sudo npm install -g http-server
+http-server www
+```
 
-tbd
+Once yoour webserver is running, visit the respective URL with your browser.
 
 ### Building Cordova platform apps
 
-tbd
+To build [Cordova](http://cordova.apache.org/) apps, you will need [node.js](https://nodejs.org/). After installing *node.js*, install *Cordova* using `npm`.
+```
+sudo npm install -g cordova
+```
+
+Depending on the platform you want to build your app for, you need to install [prerequisites](https://cordova.apache.org/docs/en/latest/guide/cli/#install-pre-requisites-for-building):
+* [Android](https://cordova.apache.org/docs/en/latest/guide/platforms/android/index.html#requirements-and-support)
+* [iOS](https://cordova.apache.org/docs/en/latest/guide/platforms/ios/index.html#requirements-and-support)
+After that, add support for the respective platform, e.g. `android`.
+```
+cordova platform add android
+```
+
+*CashReg* requires some plugins which need to be added.
+```
+cordova plugin add cordova-plugin-webserver
+cordova plugin add cordova-plugin-whitelist
+```
+
+Noy you can build
+```
+cordova build android
+```
+or build, upload and run
+```
+cordova run android
+```
+on the device connected to your computer.
 
 ### Printers
+
+Using a webbrowser, you can use printers known by your printing subsystem and print a receipt as you would print any other document or website from the internet.
+
+On mobile devices, *CashReg* can print receipts directly using Epson POS thermal printers. Please contact me or wait for updated documentation.
 
 tbd
 
