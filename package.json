@@ -1,0 +1,8 @@
+{
+  "name": "org.cashreg.app",
+  "version": "0.0.1",
+  "displayName": "CashReg",
+  "description": "A simple cash register (POS) app",
+  "author": "frank@cashreg.org",
+  "license": "GNU General Public License v3.0"
+}
