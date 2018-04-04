@@ -30,30 +30,50 @@ This hint will be removed as soon as everything is in place and development can 
 * Germany: [GoBD](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Weitere_Steuerthemen/Abgabenordnung/Datenzugriff_GDPdU/2014-11-14-GoBD.html) 
 * ...
 
+## Documentation / Usage
+
+Look at the [./docs](./docs) directory for details.
+
 ## Install / Deploy
 
 You can run *CashReg* 
-* in your web browser hosting the app on a webserver or
+* in your web browser hosting the app on a web server or
 * as a native mobile [Cordova](http://cordova.apache.org/) app.
+
+<!--
+For first impressions, you can run the app in your browser using [this link](https://www.cashreg.org/app). Please note:
+* do not use this link for production!
+* a resolution equivalent to the one of common 10 inch tablets is required.
+-->
 
 ### Using a web browser 
 
-Copy over the `./www` directory to the document root location of you webserver.
+Clone this repository and copy over the `./www` directory to the document root location of you web server.
 
-Alternatively, if you don't want to install and configure a webserver, you can use the command line [node.js](http://nodejs.org/) http server.
+Alternatively, if you don't want to install and configure a web server, you can use the command line [node.js](http://nodejs.org/) http server.
 After installing latest *node.js*, install and run the http-server
 ```
 sudo npm install -g http-server
 http-server www
 ```
 
-Once yoour webserver is running, visit the respective URL with your browser.
+Once yoour web server is running, visit the respective URL with your browser.
 
 ### Building Cordova platform apps
 
 To build [Cordova](http://cordova.apache.org/) apps, you will need [node.js](https://nodejs.org/). After installing *node.js*, install *Cordova* using `npm`.
 ```
 sudo npm install -g cordova
+```
+
+Now, create a new *Cordova* project using the current repository as a source.
+```
+cordova create cashreg org.cashreg.app CashReg --template=https://github.com/hackdaworld/cashreg
+```
+
+This will create the directory `cashreg` containing the *CashReg* source along with the *Cordova* configuration. Change to this new directory.
+```
+cd cashreg
 ```
 
 Depending on the platform you want to build your app for, you need to install [prerequisites](https://cordova.apache.org/docs/en/latest/guide/cli/#install-pre-requisites-for-building):
@@ -65,7 +85,7 @@ After that, add support for the respective platform, e.g. `android`.
 cordova platform add android
 ```
 
-*CashReg* requires some plugins which need to be added.
+*CashReg* can use features of some plugins which need to be added.
 ```
 cordova plugin add cordova-plugin-webserver
 cordova plugin add cordova-plugin-whitelist
@@ -83,7 +103,7 @@ on the device connected to your computer.
 
 ### Printers
 
-Using a webbrowser, you can use printers known by your printing subsystem and print a receipt as you would print any other document or website from the internet.
+Using a web browser, you can use printers known by your printing subsystem and print a receipt as you would print any other document or website from the internet.
 
 On mobile devices, *CashReg* can print receipts directly using Epson POS thermal printers. Please contact me or wait for updated documentation.
 
