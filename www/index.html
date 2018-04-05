@@ -1,0 +1,408 @@
+<!--
+   This file is part of CashReg.
+ 
+   CashReg is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation, either version 3 of the License, or
+   (at your option) any later version.
+ 
+   CashReg is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+ 
+   You should have received a copy of the GNU General Public License
+   along with CashReg.  If not, see <http://www.gnu.org/licenses/>.
+ 
+   Copyright (c) 2018 cashreg.org
+-->
+
+<!DOCTYPE html>
+
+<!--
+	cashreg: a simple cash register (POS) application
+	author: frank@cashreg.org
+-->
+
+<html>
+
+<head>
+	<title>CashReg</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no"/>
+
+	<!-- jquery / jquery ui -->
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<link rel="stylesheet" type="text/css"
+	      href="css/jquery-ui-1.9.2.custom.min.css">
+	<script src="js/jquery-ui-1.9.2.custom.min.js"></script>
+
+	<!-- cordova -->
+	<script src="cordova.js"></script>
+
+	<!-- cashreg (example/default) configuration -->
+	<script src="js/config.js"></script>
+	<!-- epos javascript -->
+	<!-- <script src="js/epos.js"></script> -->
+
+	<!-- utils / indexed db / couchdb -->
+	<script src="js/utils.js"></script>
+	<script src="js/idb.js"></script>
+	<script src="js/couchdb.js"></script>
+	<!-- cashreg -->
+	<script src="js/cashreg.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/cashreg.css">
+</head>
+
+<body>
+
+<div id=navwin class="navwin">
+	<div class="navbox">
+		<button id=tablesbtn class=navbtn>
+		Tables
+      		</button>
+	</div>
+	<div class="navbox">
+		<button id=ordersbtn class=navbtn>
+			Orders
+      		</button>
+	</div>
+	<div class="navbox">
+		<button id=paybtn class=navbtn>
+			Pay
+      		</button>
+	</div>
+	<div id=adminbox class=adminbox>
+		<button id=adminbtn>
+			Admin
+      		</button>
+	</div>
+</div>
+
+<div id=tableswin class="main">
+	<div id="map" class="map_win onewin"></div>
+	<div id="map_admin" class="map_win onewin"></div>
+</div>
+
+<div id=orderwin class="main">
+	<div id="catwin" class="threewin">
+		<div id="categories"></div>
+		<div id="categories_admin"></div>
+	</div>
+	<div id="prodwin" class="threewin">
+		<div id="products"></div>
+		<div id="products_admin"></div>
+		<div id="products_options"></div>
+	</div>
+	<div id="orderswin" class="threewin">
+		<div class="orders_ctrl">
+			<div class="orders_ctrldiv">
+				<button class="orders_ctrlbtn"
+				       	id="orders_ctrl_all">
+				</button>
+			</div>
+			<div class="orders_ctrldiv">
+				<button class="orders_ctrlbtn"
+				        id="orders_ctrl_sel">
+				</button>
+			</div>
+			<div class="orders_ctrldiv">
+				<button class="orders_ctrlbtn"
+				        id="orders_ctrl_state">
+				</button>
+			</div>
+			<div class="orders_ctrldiv">
+				<button class="orders_ctrlbtn"
+	   			        id="orders_ctrl_movt">
+				</button>
+			</div>
+		</div>
+		<div class="orders_list"></div>
+	</div>
+	<!-- <div id=empty class=threewin>
+	</div> -->
+</div>
+
+<div id=paywin class="main">
+	<div id="orderswin" class="threewin">
+		<div class="orders_ctrl">
+			<div class="orders_ctrldiv">
+				<button class="orders_ctrlbtn"
+				       	id="orders_ctrl_all">
+				</button>
+			</div>
+			<div class="orders_ctrldiv">
+				<button class="orders_ctrlbtn"
+				       	id="orders_ctrl_sel">
+				</button>
+			</div>
+			<div class="orders_ctrldiv">
+				<button class="orders_ctrlbtn"
+				       	id="orders_ctrl_state">
+				</button>
+			</div>
+			<div class="orders_ctrldiv">
+				<button class="orders_ctrlbtn"
+	   			        id="orders_ctrl_payt">
+				</button>
+			</div>
+		</div>
+		<div class="orders_list"></div>
+	</div>
+	<div id="groupswin" class="threewin">
+	</div>
+	<div id="billwin" class="threewin">
+		<div class="bill_list">
+		</div>
+		<div class="bill_total">
+			<div class="bill_total_fn0"></div>
+			<div class="bill_total_fn1"></div>
+			<div class="bill_total_fn2"></div>
+			<div class="bill_total_sum"></div>
+		</div>
+	</div>
+	<div id="preconfigwin" class="threewin">
+	</div>
+	<div id="configwin" class="threewin">
+			<div class="admin_subtops">
+				<b>Configuration</b>
+				<button class="config_btn std_margin" name=conf>
+					Set
+				</button>
+			</div>
+			<div class="admin_subtops">
+				<div class=config_fdesc>Name</div>
+				<input id=config_rname type=text
+				       class="std_margin config_input">
+				<div class=config_fdesc>Street</div>
+				<input id=config_street type=text
+				       class="std_margin config_input">
+				<div class=config_fdesc>City</div>
+				<input id=config_city type=text
+				       class="std_margin config_input">
+				<div class=config_fdesc>Telephone</div>
+				<input id=config_tel type=text
+				       class="std_margin config_input">
+				<div class=config_fdesc>Tax ID</div>
+				<input id=config_tid type=text
+				       class="std_margin config_input">
+				<div class=config_fdesc>Currency</div>
+				<input id=config_currency type=text
+				       class="std_margin config_input">
+				<div class=config_fdesc>In cash</div>
+				<input id=config_bufval type=text
+				       class="std_margin config_input">
+			</div>
+			<hr>
+			<div class="admin_subtops">
+				<b>Remote DB</b>
+				<button class="config_btn std_margin" name=db>
+					Set
+				</button>
+			</div>
+			<div class="admin_dbsync">
+				<div class=config_fdesc>Server</div>
+				<input id=config_sync_server type=text
+				       class="std_margin config_input">
+				<div class=config_fdesc>Prefix</div>
+				<input id=config_sync_prefix type=text
+				       class="std_margin config_input">
+			</div>
+			<hr>
+			<div class="admin_subtops">
+				<b>Export / Import</b>
+			</div>
+				<button class=admin_sync name="pushp">
+					Export products
+				</button>
+				<button class=admin_sync name="pullp">
+					Import products
+				</button>
+				<button class=admin_sync name="pusht">
+					Export tables
+				</button>
+				<button class=admin_sync name="pullt">
+					Import tables
+				</button>
+				<button class=admin_sync name="pushg">
+					Export groups
+				</button>
+				<button class=admin_sync name="pullg">
+					Import groups
+				</button>
+				<button class=admin_sync name="pushc">
+					Export config
+				</button>
+				<button class=admin_sync name="pullc">
+					Import config
+				</button>
+			<hr>
+			<div class="admin_subtops"><b>DB content</b></div>
+				<button class="admin_dbdbg" name="p">
+					Products
+				</button>
+				<button class="admin_dbdbg" name="o">
+					Orders
+				</button>
+				<button class="admin_dbdbg" name="b">
+					Payed bills
+				</button>
+				<button class="admin_dbdbg" name="z">
+					Z-Bons
+				</button>
+				<button class="admin_dbdbg" name="g">
+					Groups
+				</button>
+				<button class="admin_dbdbg" name="m">
+					Map / Tables
+				</button>
+				<button class="admin_dbdbg" name="c">
+					Config
+				</button>
+				<button class="admin_dbdbg" name="d">
+					DB Sync
+				</button>
+				<button class="admin_dbdbg" name="l">
+					Logs
+				</button>
+	</div>
+	<div class="threewin">
+		<div id="payedbillswin" class="sixtenthvertwin">
+		</div>
+		<div id="bonswin" class="sixtenthvertwin">
+			<div id="bonwin"></div>
+		</div>
+		<div id=numpadwin class="fourtenthvertwin">
+			<div class="numpad_display-keys">
+				<input type="text" readonly="true" id="numpad_display"/>
+			<div class="numpad_keys"></div>
+			</div>
+			<div class="numpad_groups"></div>
+		</div>
+		<div id="numpadadminwin" class="fourtenthvertwin">
+			<div class="numpad_admin_bon">
+			</div>
+
+
+
+		</div>
+	</div>
+</div>
+
+
+<!-- dialogs -->
+<div id="dialog"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id=oldmain class="main" style="display:none;">
+
+<div id="products" class="products_win bigwin">
+	<div id="products_ui" class="ui-widget-content">
+		<div id="products_accordion">
+		</div>
+	</div>
+	<div id="products_dialog">
+		<div class=products_dialog_amount>
+			<div class=products_dialog_num_field>
+				<button id="products_dialog_num_down">
+					&darr;
+				</button>
+			</div>
+			<div class=products_dialog_num_field>
+				<input id="products_dialog_num"
+				       size=2 type=text value="1" />
+			</div>
+			<div class=products_dialog_num_field>
+				<button id="products_dialog_num_up">
+					&uarr;
+				</button>
+			</div>
+		</div>
+	</div>
+	<div id="prodedit_dialog">
+		<div class=prodedit_dialog_key>
+		Name:
+		</div>
+		<div class=prodedit_dialog_val>
+			<input type=text id=prodedit_dialog_name>
+		</div>
+		<div class=prodedit_dialog_key>
+		Brutto:
+		</div>
+		<div class=prodedit_dialog_val>
+			<input type=number id=prodedit_dialog_brutto>
+		</div>
+		<div class=prodedit_dialog_key>
+		Groups:
+		</div>
+		<div id=prodedit_dialog_groups class=prodedit_dialog_val>
+		</div>
+	</div>
+</div>
+
+<div id="products_admin" class="products_win bigwin">
+	<b>Products</b>
+</div>
+
+<div id="orders" class="orders_win bigwin">
+	<div class="orders_ctrl">
+		<div class="orders_ctrldiv">
+			<button class="orders_ctrlbtn" id="orders_ctrl_all">
+			</button>
+		</div>
+		<div class="orders_ctrldiv">
+			<button class="orders_ctrlbtn" id="orders_ctrl_sel">
+			</button>
+		</div>
+		<div class="orders_ctrldiv">
+			<button class="orders_ctrlbtn" id="orders_ctrl_state">
+			</button>
+		</div>
+		<div class="orders_ctrldiv">
+			<button class="orders_ctrlbtn" id="orders_ctrl_movt">
+			</button>
+		</div>
+		<div class="orders_ctrldiv">
+			<button class="orders_ctrlbtn" id="orders_ctrl_payt">
+			</button>
+		</div>
+	</div>
+	<div class="orders_list"></div>
+</div>
+
+<div id="orders_admin" class="orders_win bigwin">
+</div>
+
+<div id="map" class="map_win smallwin">
+	<div id="map_table_frame"></div>
+</div>
+
+<div id="map_admin" class="map_win smallwin">
+</div>
+
+<div id="numpad" class="numpad_win smallwin">
+	<div class="numpad_display-keys">
+		<input type="text" readonly="true" id="numpad_display"/>
+		<div class="numpad_keys"></div>
+	</div>
+	<div class="numpad_groups"></div>
+</div>
+
+
+</div>
+
+</body>
+
+</html>
+
