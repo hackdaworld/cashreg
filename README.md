@@ -50,7 +50,7 @@ For first impressions, you can run the app in your browser using [this link](htt
 
 Clone this repository
 ```
-git clone https://github.com/hackdaworld/cashreg.git
+git clone https://github.com/hackdaworld/cashreg.git --recursive
 cd cashreg
 ```
  and copy over the `./www` directory to the document root location of you web server.
@@ -73,7 +73,7 @@ sudo npm install -g cordova
 
 Clone this repository.
 ```
-git clone https://github.com/hackdaworld/cashreg.git
+git clone https://github.com/hackdaworld/cashreg.git --recursive
 ```
 
 This will create the directory `cashreg` containing the *CashReg* source along with the *Cordova* configuration. Change to this new directory.
