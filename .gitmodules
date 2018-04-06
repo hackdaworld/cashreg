@@ -1,0 +1,6 @@
+[submodule "www/js/www/js/jsutils.git"]
+	path = www/js/www/js/jsutils.git
+	url = https://github.com/hackdaworld/jsutils
+[submodule "www/js/jsutils"]
+	path = www/js/jsutils
+	url = https://github.com/hackdaworld/jsutils
