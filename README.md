@@ -48,7 +48,12 @@ For first impressions, you can run the app in your browser using [this link](htt
 
 ### Using a web browser 
 
-Clone this repository and copy over the `./www` directory to the document root location of you web server.
+Clone this repository
+```
+git clone https://github.com/hackdaworld/cashreg.git
+cd cashreg
+```
+ and copy over the `./www` directory to the document root location of you web server.
 
 Alternatively, if you don't want to install and configure a web server, you can use the command line [node.js](http://nodejs.org/) http server.
 After installing latest *node.js*, install and run the http-server
@@ -66,9 +71,9 @@ To build [Cordova](http://cordova.apache.org/) apps, you will need [node.js](htt
 sudo npm install -g cordova
 ```
 
-Now, create a new *Cordova* project using the current repository as a source.
+Clone this repository.
 ```
-cordova create cashreg org.cashreg.app CashReg --template=https://github.com/hackdaworld/cashreg
+git clone https://github.com/hackdaworld/cashreg.git
 ```
 
 This will create the directory `cashreg` containing the *CashReg* source along with the *Cordova* configuration. Change to this new directory.
