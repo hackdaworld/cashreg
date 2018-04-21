@@ -30,6 +30,16 @@ This hint will be removed as soon as everything is in place and development can 
 * Germany: [GoBD](https://www.bundesfinanzministerium.de/Content/DE/Downloads/BMF_Schreiben/Weitere_Steuerthemen/Abgabenordnung/Datenzugriff_GDPdU/2014-11-14-GoBD.html) 
 * ...
 
+## Tasks / ToDo
+
+- [x] Publish on GitHub
+- [ ] Indicate voucher payments in payed bills
+- [ ] Multilanguage support
+- [ ] Add documentation
+- [ ] Continue and add CashReg Analyzer app
+- [ ] Cleanup and restructure
+- [ ] Prepare for Android Playstore
+
 ## Documentation / Usage
 
 Look at the [./docs](./docs) directory for details.
