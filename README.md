@@ -34,6 +34,8 @@ This hint will be removed as soon as everything is in place and development can 
 
 - [x] Publish on GitHub
 - [ ] Indicate voucher payments in payed bills
+- [ ] Add mongoDB support
+- [ ] Add authentication for mongoDB and couchDB
 - [ ] Multilanguage support
 - [ ] Add documentation
 - [ ] Continue and add CashReg Analyzer app
