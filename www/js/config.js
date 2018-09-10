@@ -34,13 +34,14 @@ var DEFGOCOL="lime";
 /* products dialog */
 var CGRPTITLE="Anzahl und Gruppe w&auml;hlen";
 var CAMOUNT=6;
+var OPTIONSTITLE="Optionen";
 
 /* bon and accounting configuration */
-RNAME="Cafe Foobar";
-STREET="Augsburgerstr. 2";
-CITY="86150 Augsburg";
-TEL="Tel: 0821 / 123456";
-TID="UStID:  123/456/78901";
+var RNAME="Cafe Foobar";
+var STREET="Augsburgerstr. 2";
+var CITY="86150 Augsburg";
+var TEL="Tel: 0821 / 123456";
+var TID="UStID:  123/456/78901";
 var BONHEAD="<div class=head2>"+
             "<img src=./img/logo.png width=100%><br>"+
             "</div>"+
@@ -62,8 +63,7 @@ var RECEIPT="Beleg";
 // x/z bon
 var BUFVAL=0;
 var RUNTOT="Kassenstand";
-var OWNSALES="Eigener Umsatz"
-var OUTSIDE="Abzuf&uuml;hrender Fremdumsatz";
+var SALES="Umsatz"
 var SAVINGS="Betrag Bankeinzahlung";
 var ZBONBTN="Complete the day ...";
 var ZBONMODAL="Wait a moment! Are you absolutely sure?";
@@ -83,6 +83,7 @@ var PAY_ADMINMODE="Konfiguration / X und Z Bons";
 var PCHARS=36;
 var CCHARS=7;
 var TDIND=4;
+var TSEP=12;
 
 var DRAWERNUM="1";
 
@@ -96,7 +97,7 @@ var PAYBILL="&euro; / &cent;";
 
 /* noncash  */
 // 1: vouchers
-var PAYVOUCH="&spades;<br>&clubs; V &hearts;<br>&diams;";
+var PAYVOUCH="&spades;<br>&clubs; G &hearts;<br>&diams;";
 var VOUCHAMOUNT="Einzul&ouml;sender Gutscheinwert"
 var VPAY="OK!";
 var VCANCEL="Abbruch";
@@ -123,8 +124,12 @@ var CTABLETITLE="Tisch w&auml;hlen";
 /* group */
 var CGROUPTITLE="Gruppe w&auml;hlen";
 
-/* edit products */
+/* edit categories and products */
 var PEDIT="Produkt editieren";
+var CEDIT="Kategorie editieren";
+var EDEL="Entfernen";
+var ESAVE="Speichern";
+var ECANCEL="Abbrechen";
 
 // --- content data configuration ---
 
@@ -311,18 +316,25 @@ config.groups = [
 		'ours': 1
 	},
 	{
-		'name': 'Personal',
+		'name': 'Personal 19%',
+		'tax': 19,
+		'discount': 20,
+		'active': true,
+		'ours': 1
+	},
+	{
+		'name': 'Personal  7%',
+		'tax': 7,
+		'discount': 20,
+		'active': true,
+		'ours': 1
+	},
+	{
+		'name': 'Personal @ Work',
 		'tax': 19,
 		'discount': 0,
 		'active': true,
 		'ours': -1
-	},
-	{
-		'name': 'DHL Service',
-		'tax': 19,
-		'discount': 0,
-		'active': true,
-		'ours': 0
 	},
 	{
 		'name': 'Bruch',
@@ -330,6 +342,13 @@ config.groups = [
 		'discount': 0,
 		'active': true,
 		'ours': -1
+	},
+	{
+		'name': 'Gutscheine',
+		'tax': 0,
+		'discount': 0,
+		'active': false,
+		'ours': 1
 	}
 ];
 

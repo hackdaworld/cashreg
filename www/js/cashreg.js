@@ -122,6 +122,8 @@ var dbsync = {
 	type: "",
 	href: "",
 	prefix: "",
+	user: "",
+	password: "",
 	show: "",
 	set: function(event) {
 		var dbval=$('#config_sync_server').val();
@@ -131,6 +133,9 @@ var dbsync = {
 		item.host=dbparts[1].replace(/\//g,"");
 		item.port=parseInt(dbparts[2].replace(/\//g,""));
 		item.prefix=$('#config_sync_prefix').val();
+		item.user=$('#config_sync_user').val();
+		item.password=$('#config_sync_password').val();
+		couchdb.set_auth("basic",item.user,item.password);
 		db.get_store_items('dbsync',function(si) {
 			for(var last in si);
 			item.date=(new Date()).toString();
@@ -191,56 +196,114 @@ var dbsync = {
 			couchdb.cdb_xhr('PUT',link+"/"+key,data,callback);
 		});
 	},
+	couch_db_init: function(db) {
+		// checks whether user & passwd are set?
+		var auser=$('#config_sync_auser').val();
+		var apwd=$('#config_sync_apassword').val();
+		var mode="party";
+
+		if((auser==="")||(apwd==="")) {
+			alert("User and/or password not set!\n"+
+			      "Assuming airy admin party!");
+		}
+		else {
+			mode="admin";
+		}
+
+		// set admin auth
+		if(mode=="admin")
+			couchdb.set_auth("basic",auser,apwd);
+
+		// create db code
+		var dbn='_cashreg_'+db;
+		var dburl=dbsync.href+dbsync.prefix+dbn;
+		couchdb.cdb_xhr('PUT',dburl,null,function() {
+			cl("created couchdb database "+db);
+			//dbsync.sync_idb_couchdb(db)
+		},function(x,s,e){
+			alert("dbsync: db create error - "+e);
+		});
+
+		// reset user auth and delete input fields
+		setTimeout(function() {
+			if(mode==="party")
+				return;
+			$('#config_sync_auser').val("");
+			$('#config_sync_apassword').val("");
+			couchdb.set_auth("basic",dbsync.user,dbsync.password);
+		},7000);
+	},
+	init_db: function() {
+		// create dbs
+		switch(dbsync.type) {
+			case 'couchdb':
+				// create dbs
+				var dbt=[
+					"bills","bons","log",
+					"products","config","groups","map"
+				];
+				for(var dbi in dbt)
+					dbsync.couch_db_init(dbt[dbi]);
+				break;
+			default:
+				cl("dbsync: db type "+dbsync.type+" unknown!");
+		}
+	},
+	sync_couch_db: function(db) {
+		var dbn='_cashreg_'+db;
+		var dburl=dbsync.href+dbsync.prefix+dbn;
+		couchdb.cdb_xhr('GET',dburl,null,function(ro) {
+			dbsync.sync_idb_couchdb(db);
+		},function(xhr,stat,err) {
+			switch(err) {
+				case "Object Not Found":
+					alert("dbsync: db "+db+" not found!\n"+
+					      "Initialize database first!");
+					break;
+				default:
+					alert("dbsync: db "+db+
+					      " access error - "+err+"\n"+
+					      "Supply credentials!");
+					break;
+			}
+		});
+	},
 	sync: function() {
 		switch(dbsync.type) {
 			case 'couchdb':
-				// logs
-				couchdb.cdb_xhr('PUT',
-				                dbsync.href+dbsync.prefix+
-				                '_cashreg_log',
-				                null,
-				                function() {
-					dbsync.sync_idb_couchdb('log');
-				});
-				// payed bills
-				couchdb.cdb_xhr('PUT',
-				                dbsync.href+dbsync.prefix+
-				                '_cashreg_bills',
-				                null,
-				                //dbsync.couchdb_bills);
-				                function() {
-					dbsync.sync_idb_couchdb(
-						'bills'
-					);
-				});
-				// bons
-				couchdb.cdb_xhr('PUT',
-				                dbsync.href+dbsync.prefix+
-				                '_cashreg_bons',
-				                null,
-				                //dbsync.couchdb_bons);
-				                function() {
-					dbsync.sync_idb_couchdb('bons');
-				});
+				var dbt=["bills","bons","log"];
+				for(var dbi in dbt) {
+					dbsync.sync_couch_db(dbt[dbi]);
+				}
 				break;
 			default:
-				cl("db type "+dbsync.type+" unknown!");
+				cl("dbsync: db type "+dbsync.type+" unknown!");
 		}
 	},
 	interval: 0,
 	startsync: function() {
 		db.get_store_items('dbsync',function(dbs) {
-			for(var k in dbs) {
-				dbsync.host=dbs[k].host;
-				dbsync.port=dbs[k].port;
-				dbsync.type=dbs[k].type;
-				dbsync.show=dbsync.type+"://"+dbsync.host+":"+
-				         dbsync.port+"/";
-				dbsync.href="http://"+dbsync.host+":"+
-				         dbsync.port+"/";
-				dbsync.prefix=dbs[k].prefix;
-			}
+			for(var k in dbs);
+
+			dbsync.host=dbs[k].host;
+			dbsync.port=dbs[k].port;
+			dbsync.type=dbs[k].type;
+			dbsync.prefix=dbs[k].prefix;
+			dbsync.user=dbs[k].user;
+			if(dbsync.user===undefined)
+				dbsync.user="";
+			dbsync.password=dbs[k].password;
+			if(dbsync.password===undefined)
+				dbsync.password="";
+
+			couchdb.set_auth("basic",dbsync.user,dbsync.password);
+			dbsync.show=dbsync.type+"://"+dbsync.host+":"+
+			         dbsync.port+"/";
+			dbsync.href="http://"+dbsync.host+":"+
+			         dbsync.port+"/";
+
 			dbsync.interval=setInterval(dbsync.sync,5*60*1000);
+dbsync.sync();
 		},0,-1);
 	}
 }
@@ -516,6 +579,9 @@ var bill = {
 			case "db":
 				dbsync.set();
 				break;
+			case "dbi":
+				dbsync.init_db();
+				break;
 			case "conf":
 				bill.set_config();
 				break;
@@ -739,12 +805,20 @@ var bill = {
 			dbsync.host=dbs[last].host;
 			dbsync.port=dbs[last].port;
 			dbsync.type=dbs[last].type;
+			dbsync.user=dbs[last].user;
+			if(dbsync.user===undefined)
+				dbsync.user="";
+			dbsync.password=dbs[last].password;
+			if(dbsync.password===undefined)
+				dbsync.password="";
 			dbsync.prefix=dbs[last].prefix;
 			dbsync.show=dbsync.type+"://"+dbsync.host+":"+
 			            dbsync.port+"/";
 			dbsync.href="http://"+dbsync.host+":"+dbsync.port+"/";
 			$('#config_sync_server').val(dbsync.show);
 			$('#config_sync_prefix').val(dbsync.prefix);
+			$('#config_sync_user').val(dbsync.user);
+			$('#config_sync_password').val(dbsync.password);
 		},0,-1);
 	},
 	draw: function(mode) {
@@ -1474,7 +1548,6 @@ var payedbills = {
 			var from=bon[last].billid;
 			var oldb=bon[last].balance;
 			var deltab=0;
-			var theirs=0;
 			var ours=0;
 			var noncash={};
 			db.get_store_items('bills',function(bills) {
@@ -1528,9 +1601,6 @@ var payedbills = {
 						else {
 							var g=groups.items[gid];
 							gst=g.name;
-							if(g.ours==0) {
-								theirs+=add;
-							}
 							if(g.ours==1) {
 								ours+=add;
 							}
@@ -1642,21 +1712,11 @@ var payedbills = {
 				html=html+drw("<hr>",'foot-s');
 				html=html+drw("<hr>",'foot-e');
 				epos+="\n";
-				// outside capital
-				if(theirs!=0) {
-					html=html+"<div width=100%>";
-					html=html+OUTSIDE+": "+
-					     theirs.toFixed(2);
-					html=html+"</div>";
-					epos+=OUTSIDE+": "+
-					      theirs.toFixed(2)+"\n";
-					payedbills.zbon.balance-=theirs;
-				}
 				// sales volume
 				html=html+"<div width=100%>";
-				html=html+OWNSALES+": "+ours.toFixed(2);
+				html=html+SALES+": "+ours.toFixed(2);
 				html=html+"</div>";
-				epos+=OWNSALES+": "+ours.toFixed(2)+"\n";
+				epos+=SALES+": "+ours.toFixed(2)+"\n";
 				for(var tax in otax) {
 					html=html+"<div width=100%>";
 					html=html+" - "+tax+"%: "+
@@ -1685,7 +1745,7 @@ var payedbills = {
 				// new balance value
 				payedbills.zbon.balance-=save;
 				// store transfer value
-				payedbills.zbon.transfer=-(save+theirs);
+				payedbills.zbon.transfer=-save;
 				// store printable version
 				payedbills.zhtml=html;
 				payedbills.epos=html2ascii(epos);
@@ -3166,7 +3226,10 @@ var cashreg = {
 		tabnav.init();
 
 		// init database
-		//db.del(); // delete (for testing)
+		/*
+		db.name="cashreg";
+		db.del(); // delete (for testing)
+		*/
 		db.init("cashreg",function() {
 			numpad.drawgroups();
 			payedbills.draw();
