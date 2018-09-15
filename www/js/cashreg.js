@@ -109,7 +109,7 @@ function log(type,text,callback,obj) {
 		item.obj=obj;
 	db.add_store_item('log',item,function() {
 		cl("log ("+type+") stored");
-		if(callback!==undefined)
+		if(typeof callback === "function")
 			callback();
 	});
 }
@@ -2032,7 +2032,7 @@ var products = {
 					var amsg="select lock 1 ("+
 					         products.select_lock+"), "+
 						 "tell your boss!";
-					alert("amsg");
+					alert(amsg);
 					return;
 				}
 				products.select_lock=0;
@@ -2074,6 +2074,10 @@ var products = {
 				modal: true,
 				title: OPTIONSTITLE,
 				position: ['center',10],
+				close: function() {
+					if(products.select_lock==1)
+						products.select_lock=7;
+				},
 				buttons: btnset
 			});
 			$('#products_options').dialog("open");
